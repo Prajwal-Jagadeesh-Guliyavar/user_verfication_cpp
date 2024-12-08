@@ -12,6 +12,21 @@ class temp{
         void forgotPassword();
 } obj;
 
+void temp :: signUP(){
+    cout<<"\nEnter the username (do not use special characters like *,&,%,@): ";
+    getline(cin,username);
+    cout<<"\nEnter the user email : ";
+    getline(cin,useremail);
+    cout<<"\nEnter the password : ";
+    getline(cin,password);
+    
+    //opening the file in the write mode
+    file.open("userDATA.txt",ios::out|ios::app);
+    //writing the data into the file
+    file<<username<<"*"<<useremail<<"*"<<password<<endl;
+    file.close();
+}
+
 int main(){
 
     int ch;
