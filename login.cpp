@@ -8,61 +8,66 @@ class temp{
 
     public:
         void logIN();
-        void signUP(string,string,string);
+        void signUP();
         void forgotPassword();
 } obj;
 
-void temp :: signUP(string username, string useremail, string password){
-    cout<<"\nEnter the username (do not use special characters like *,&,%,@): ";
-    getline(cin,username);
-    cout<<"\nEnter the user email : ";
-    getline(cin,useremail);
-    cout<<"\nEnter the password : ";
-    getline(cin,password);
-    
-    //opening the file in the write mode
-    file.open("userDATA.txt",ios::out|ios::app);
-    //writing the data into the file
-    file<<username<<"*"<<useremail<<"*"<<password<<endl;
+void temp::signUP() {
+    cout << "\nEnter the username (do not use special characters like *,&,%,@): ";
+    cin.ignore(); // clearing the input buffer
+    getline(cin, username);
+    cout << "\nEnter the user email: ";
+    getline(cin, useremail);
+    cout << "\nEnter the password: ";
+    getline(cin, password);
+
+    // Opening the file to write
+    file.open("userDATA.txt", ios::out | ios::app);
+    // Writing the records in the file
+    file << username << "*" << useremail << "*" << password << endl;
     file.close();
-}//EOF
+} // EOF
 
-void temp::logIN(){
-    //string keyname,key;
 
-    cout<<"---------------------LOGIN---------------------------"<<endl;
-    cout<<"\nEnter the username : ";
-    getline(cin,keyname);
-    cout<<"\nEnter the password : ";
-    getline(cin,key);
-    //opening the file in the read mode
+void temp::logIN() {
+    cout << "---------------------LOGIN---------------------------" << endl;
+    cout << "\nEnter the username: ";
+    cin.ignore();
+    getline(cin, keyname);
+    cout << "\nEnter the password: ";
+    getline(cin, key);
+
+    // open the file to read
     file.open("userDATA.txt", ios::in);
-
-    //reading the record of the file
-    getline(file, username, '*');
-    getline(file, useremail, '*');
-    getline(file, password, '\n');
-
-    //looping till the end of the file
-    while(!file.eof()){
-        
-        //user verification
-        if(username == keyname){
-            if(password == key){
-                cout<<"user Authentication is Successfull \n";
-                cout<<"User Name  : "<<username<<endl;
-                cout<<"User Email : "<<useremail<<endl;
-            }
-        }
-        //reading the next records in the newline
-        getline(file, username, '*');
-        getline(file, useremail, '*');
-        getline(file, password, '\n');
-
+    if (!file) {
+        cout << "Error: Unable to open the file.\n";
+        return;
     }
-    cout<<"Sorry\nEither your Username or Password is incorrect\n\t............Please Try Again............"<<endl;
+
+    bool yeah = false;
+
+    // reading the records
+    while (getline(file, username, '*') && 
+           getline(file, useremail, '*') && 
+           getline(file, password, '\n')) {
+
+        // User verification
+        if (username == keyname && password == key) {
+            cout << "User Authentication is Successful!\n";
+            cout << "User Name  : " << username << endl;
+            cout << "User Email : " << useremail << endl;
+            yeah = true;
+            break; // Exit the loop as user is authenticated
+        }
+    }
+
+    if (!yeah) {
+        cout << "Sorry\nEither your Username or Password is incorrect\n\t............Please Try Again............" << endl;
+    }
+
     file.close();
 }//EOF
+
 
 void temp::forgotPassword() {
     char chose;
@@ -136,33 +141,31 @@ void temp::forgotPassword() {
 }
 
 
-int main(){
-
+int main() {
     int ch;
-    string username,useremail,password;
-    cout<<"\n1.Log IN\n2.Sign UP\n3.Forgot Password\n4.Skadoosh\n Enter your choice :"<<endl;
-    cin>>ch;
-    switch(ch){
-        case 1:
-            cout<<"\nEnter the username (do not use special characters like *,&,%,@): ";
-            getline(cin,username);
-            cout<<"\nEnter the user email : ";
-            getline(cin,useremail);
-            cout<<"\nEnter the password : ";
-            getline(cin,password);
-            obj.signUP(username,useremail,password);
+    cout << "\n1.Sign UP\n2.Log IN\n3.Forgot Password\n4.Skadoosh\nEnter your choice: \t";
+    cin >> ch;
+    cout<<endl;
 
+    switch (ch) {
+        case 1:
+            obj.signUP();
             break;
 
         case 2:
+            obj.logIN();
+            break;
 
-            break;
         case 3:
+            obj.forgotPassword();
             break;
+
         case 4:
+            exit(0); // Exit the program
             break;
+
         default:
-            cout<<"Invalid choice.............!"<<endl; 
+            cout << "Invalid choice.............!" << endl;
     }
 
     return 0;
