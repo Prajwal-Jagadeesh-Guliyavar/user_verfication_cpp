@@ -1,24 +1,25 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-class temp{
-    string keyname,keyemail,key;
-    string username,useremail,password;
+class temp {
+    string keyname, keyemail, key;
+    string username, useremail, password;
     fstream file;
 
-    public:
-        void logIN();
-        void signUP();
-        void forgotPassword();
+public:
+    void logIN();
+    void signUP();
+    void forgotPassword();
 } obj;
 
 void temp::signUP() {
+    cout << "----------------------SIGNUP---------------------------" << endl;
     cout << "\nEnter the username (do not use special characters like *,&,%,@): ";
     cin.ignore(); // clearing the input buffer
     getline(cin, username);
-    cout << "\nEnter the user email: ";
+    cout << "Enter the user email: ";
     getline(cin, useremail);
-    cout << "\nEnter the password: ";
+    cout << "Enter the password: ";
     getline(cin, password);
 
     // Opening the file to write
@@ -28,13 +29,13 @@ void temp::signUP() {
     file.close();
 } // EOF
 
-
 void temp::logIN() {
-    cout << "---------------------LOGIN---------------------------" << endl;
+    cout<<endl;
+    cout << "-----------------------LOGIN---------------------------" << endl;
     cout << "\nEnter the username: ";
     cin.ignore();
     getline(cin, keyname);
-    cout << "\nEnter the password: ";
+    cout << "Enter the password: ";
     getline(cin, key);
 
     // open the file to read
@@ -44,40 +45,54 @@ void temp::logIN() {
         return;
     }
 
-    bool yeah = false;
+    bool found = false;
 
     // reading the records
     while (getline(file, username, '*') && 
            getline(file, useremail, '*') && 
            getline(file, password, '\n')) {
 
-        // User verification
-        if (username == keyname && password == key) {
-            cout << "User Authentication is Successful!\n";
-            cout << "User Name  : " << username << endl;
-            cout << "User Email : " << useremail << endl;
-            yeah = true;
-            break; // Exit the loop as user is authenticated
+        if (username == keyname) {
+            found = true;
+            if (password == key) {
+                cout << "User Authentication is Successful!\n";
+                cout << "User Name  : " << username << endl;
+                cout << "User Email : " << useremail << endl;
+                file.close(); // Close file after successful login
+                return;
+            } else {
+                cout << "Incorrect password! Would you like to reset it? [y/n]: ";
+                char choice;
+                cin >> choice;
+                file.close(); // Close file before calling forgotPassword
+                if (choice == 'y' || choice == 'Y') {
+                    forgotPassword();
+                } else {
+                    cout << "Login attempt failed.\n";
+                }
+                return;
+            }
         }
     }
 
-    if (!yeah) {
-        cout << "Sorry\nEither your Username or Password is incorrect\n\t............Please Try Again............" << endl;
+    if (!found) {
+        cout << "Username not found.\n";
     }
 
-    file.close();
-}//EOF
+    file.close(); // Ensure the file is closed if no match is found
+}
 
 
 void temp::forgotPassword() {
     char chose;
     string newkey1, newkey2;
     bool found = false;
-
+    cout<<endl;
+    cout << "---------------------RESET PASSWORD----------------------" << endl;
     cout << "\nEnter the username: ";
     cin.ignore(); // To clear any leftover newline in the input buffer
     getline(cin, keyname);
-    cout << "\nEnter the user email: ";
+    cout << "Enter the user email: ";
     getline(cin, keyemail);
 
     // Open the file for reading
@@ -89,24 +104,17 @@ void temp::forgotPassword() {
 
     string fileContent = ""; // To store updated file content
     string tempusername, tempuseremail, temppassword;
-    while (!file.eof()) {
-        // Read a record
-        getline(file, tempusername, '*');
-        getline(file, tempuseremail, '*');
-        getline(file, temppassword, '\n');
+    while (getline(file, tempusername, '*') &&
+           getline(file, tempuseremail, '*') &&
+           getline(file, temppassword, '\n')) {
 
-        if (file.fail()) {
-            break; // Handle trailing newline or invalid reads
-        }
-
-        // Check for matching username and email
         if (tempusername == keyname && tempuseremail == keyemail) {
             found = true;
             cout << "Account found..........!\n";
 
             cout << "\nDo you want to change your password? [y/n]: ";
             cin >> chose;
-            cin.ignore();//ignore the newline
+            cin.ignore(); // ignore the newline
             if (chose == 'y') {
                 cout << "\nEnter the new password: ";
                 getline(cin, newkey1);
@@ -138,34 +146,36 @@ void temp::forgotPassword() {
     file.open("userDATA.txt", ios::out | ios::trunc);
     file << fileContent;
     file.close();
+    return;
 }
-
 
 int main() {
     int ch;
-    cout << "\n1.Sign UP\n2.Log IN\n3.Forgot Password\n4.Skadoosh\nEnter your choice: \t";
-    cin >> ch;
-    cout<<endl;
+    for(;;){
+        cout << "\n1- Sign UP\n2- Log IN\n3- Forgot Password\n4- Exit\nEnter your choice: \t";
+        cin >> ch;
+        cout << endl;
 
-    switch (ch) {
-        case 1:
-            obj.signUP();
-            break;
+        switch (ch) {
+            case 1:
+                obj.signUP();
+                break;
 
-        case 2:
-            obj.logIN();
-            break;
+            case 2:
+                obj.logIN();
+                break;
 
-        case 3:
-            obj.forgotPassword();
-            break;
+            case 3:
+                obj.forgotPassword();
+                break;
 
-        case 4:
-            exit(0); // Exit the program
-            break;
+            case 4:
+                exit(0); // Exit the program
+                //break;
 
-        default:
-            cout << "Invalid choice.............!" << endl;
+            default:
+                cout << "Invalid choice.............!" << endl;
+        }
     }
 
     return 0;
