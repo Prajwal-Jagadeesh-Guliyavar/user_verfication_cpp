@@ -143,7 +143,6 @@ void temp::forgotPassword() {
         cout << "No record found with the provided username and email..........?\n";
         return;
     }
-
     // Rewrite the file with updated content
     file.open("userDATA.csv", ios::out | ios::trunc);
     file << fileContent;
