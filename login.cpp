@@ -14,7 +14,7 @@ class temp {
 
 void temp::signUP() {
     cout << "----------------------SIGNUP---------------------------" << endl;
-    cout << "\nEnter the username (do not use special characters like *,&,%,@): ";
+    cout << "\nEnter the username (do not use special characters like ,,&,%,@): ";
     cin.ignore(); // clearing the input buffer
     getline(cin, username);
     cout << "Enter the user email: ";
@@ -23,10 +23,11 @@ void temp::signUP() {
     getline(cin, password);
 
     // Opening the file to write
-    file.open("userDATA.txt", ios::out | ios::app);
+    file.open("userDATA.csv", ios::out | ios::app);
     // Writing the records in the file
-    file << username << "*" << useremail << "*" << password << endl;
+    file << username << "," << useremail << "," << password << endl;
     file.close();
+    cout<<"-------------------------------------------------------"<<endl;
 } // EOF
 
 void temp::logIN() {
@@ -39,7 +40,7 @@ void temp::logIN() {
     getline(cin, key);
 
     // open the file to read
-    file.open("userDATA.txt", ios::in);
+    file.open("userDATA.csv", ios::in);
     if (!file) {
         cout << "Error: Unable to open the file.\n";
         return;
@@ -48,8 +49,8 @@ void temp::logIN() {
     bool found = false;
 
     // reading the records
-    while (getline(file, username, '*') && 
-           getline(file, useremail, '*') && 
+    while (getline(file, username, ',') && 
+           getline(file, useremail, ',') && 
            getline(file, password, '\n')) {
 
         if (username == keyname) {
@@ -80,6 +81,7 @@ void temp::logIN() {
     }
 
     file.close(); // Ensure the file is closed if no match is found
+    cout<<"-------------------------------------------------------"<<endl;
 }
 
 
@@ -96,7 +98,7 @@ void temp::forgotPassword() {
     getline(cin, keyemail);
 
     // Open the file for reading
-    file.open("userDATA.txt", ios::in);
+    file.open("userDATA.csv", ios::in);
     if (!file) {
         cout << "Error: Could not open the file.\n";
         return;
@@ -104,8 +106,8 @@ void temp::forgotPassword() {
 
     string fileContent = ""; // To store updated file content
     string tempusername, tempuseremail, temppassword;
-    while (getline(file, tempusername, '*') &&
-           getline(file, tempuseremail, '*') &&
+    while (getline(file, tempusername, ',') &&
+           getline(file, tempuseremail, ',') &&
            getline(file, temppassword, '\n')) {
 
         if (tempusername == keyname && tempuseremail == keyemail) {
@@ -133,7 +135,7 @@ void temp::forgotPassword() {
         }
 
         // Append the updated record to the file content
-        fileContent += tempusername + "*" + tempuseremail + "*" + temppassword + "\n";
+        fileContent += tempusername + "," + tempuseremail + "," + temppassword + "\n";
     }
     file.close();
 
@@ -143,9 +145,10 @@ void temp::forgotPassword() {
     }
 
     // Rewrite the file with updated content
-    file.open("userDATA.txt", ios::out | ios::trunc);
+    file.open("userDATA.csv", ios::out | ios::trunc);
     file << fileContent;
     file.close();
+    cout<<"---------------------------------------------------------"<<endl;
     return;
 }
 
