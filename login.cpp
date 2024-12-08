@@ -6,10 +6,10 @@ class temp {
     string username, useremail, password;
     fstream file;
 
-public:
-    void logIN();
-    void signUP();
-    void forgotPassword();
+    public:
+        void logIN();
+        void signUP();
+        void forgotPassword();
 } obj;
 
 void temp::signUP() {
