@@ -25,7 +25,44 @@ void temp :: signUP(){
     //writing the data into the file
     file<<username<<"*"<<useremail<<"*"<<password<<endl;
     file.close();
-}
+}//EOF
+
+void temp::logIN(){
+    string keyname,key;
+
+    cout<<"---------------------LOGIN---------------------------"<<endl;
+    cout<<"\nEnter the username : ";
+    getline(cin,keyname);
+    cout<<"\nEnter the password : ";
+    getline(cin,key);
+    //opening the file in the read mode
+    file.open("userDATA.txt", ios::in);
+
+    //reading the record of the file
+    getline(file, username, '*');
+    getline(file, useremail, '*');
+    getline(file, password, '\n');
+
+    //looping till the end of the file
+    while(!file.eof()){
+        
+        //user verification
+        if(username == keyname){
+            if(password == key){
+                cout<<"user Authentication is Successfull \n";
+                cout<<"User Name  : "<<username<<endl;
+                cout<<"User Email : "<<useremail<<endl;
+            }
+        }
+        //reading the next records in the newline
+        getline(file, username, '*');
+        getline(file, useremail, '*');
+        getline(file, password, '\n');
+
+    }
+    cout<<"Sorry\nEither your Username or Password is incorrect\n\t............Please Try Again............"<<endl;
+    file.close();
+}//EOF
 
 int main(){
 
