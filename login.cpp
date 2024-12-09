@@ -10,6 +10,7 @@ class temp {
         void logIN();
         void signUP();
         void forgotPassword();
+        void secureLayer();
 } obj;
 
 void temp::signUP() {
